@@ -1,0 +1,175 @@
+/* ========== КАЛЕНДАРЬ ДЛЯ МАНИКЮРНОГО САЛОНА (компактный) ========== */
+
+/* Контейнер календаря */
+.custom-calendar {
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid #edd9cf;
+    overflow: hidden;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Шапка календаря */
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    background: #fffaf7;
+    border-bottom: 1px solid #f0e0d6;
+}
+
+.calendar-month-year {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #5c4238;
+}
+
+.calendar-nav-btn {
+    background: #ccaa98;
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.calendar-nav-btn:hover {
+    background: #b48b75;
+    transform: scale(1.05);
+}
+
+/* Дни недели */
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    padding: 0.4rem 0;
+    background: #fef9f5;
+    border-bottom: 1px solid #f0e0d6;
+}
+
+.calendar-weekday {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #8f7a70;
+}
+
+/* Сетка дней */
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.15rem;
+    padding: 0.4rem;
+}
+
+/* Ячейка дня */
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #5c4238;
+    background: white;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1.5px solid transparent;
+    position: relative;
+}
+
+.calendar-day:hover {
+    background: #f5e8e2;
+}
+
+/* Дни другого месяца */
+.calendar-day.other-month {
+    color: #cbb5a8;
+    background: #fefcfb;
+}
+
+/* Зелёная обводка — есть свободные слоты */
+.calendar-day.has-free {
+    border-color: #7cb47c;
+}
+
+/* Красная обводка — всё занято */
+.calendar-day.all-booked {
+    border-color: #cc8888;
+}
+
+/* Выбранный день */
+.calendar-day.selected {
+    background: #ccaa98;
+    color: white;
+    border-color: #ccaa98;
+}
+
+/* Индикатор внизу ячейки (точка) */
+.calendar-day .status-dot {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+}
+
+.calendar-day.has-free .status-dot {
+    background: #7cb47c;
+}
+
+.calendar-day.all-booked .status-dot {
+    background: #cc8888;
+}
+
+/* Скрываем старый input date */
+.hidden-date-input {
+    display: none;
+}
+
+/* Подпись под календарём */
+.calendar-legend {
+    font-size: 0.7rem;
+    color: #8f7a70;
+    text-align: center;
+    margin-top: 0.5rem;
+    padding: 0.3rem;
+}
+
+/* Адаптация для ПК — календарь компактный */
+@media (min-width: 768px) {
+    .custom-calendar {
+        max-width: 380px;
+    }
+    .calendar-day {
+        font-size: 0.75rem;
+    }
+    .calendar-weekday {
+        font-size: 0.65rem;
+    }
+}
+
+/* Адаптация для телефонов — чуть крупнее */
+@media (max-width: 600px) {
+    .custom-calendar {
+        max-width: 100%;
+    }
+    .calendar-day {
+        font-size: 0.85rem;
+    }
+    .calendar-weekday {
+        font-size: 0.7rem;
+    }
+}

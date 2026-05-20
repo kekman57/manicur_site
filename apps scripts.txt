@@ -1,0 +1,82 @@
+function doGet() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Schedule");
+  const data = sheet.getDataRange().getValues();
+  const result = [];
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const date = row[0];
+    const time = row[1];
+    const status = row[2] === "занято" ? "занято" : "свободно";
+    if (date && time) {
+      result.push({
+        date: date instanceof Date ? `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}` : String(date),
+        time: time instanceof Date ? `${String(time.getHours()).padStart(2,'0')}:${String(time.getMinutes()).padStart(2,'0')}` : String(time),
+        status: status
+      });
+    }
+  }
+  return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);
+}
+
+
+
+
+
+
+
+
+
+// ========== УМНАЯ АВТОМАТИЧЕСКАЯ СОРТИРОВКА (2 СЛУЧАЯ) ==========
+function onEdit(e) {
+  if (!e) return;
+  
+  const sheet = e.source.getActiveSheet();
+  if (sheet.getName() !== "Schedule") return;
+  
+  const range = e.range;
+  const row = range.getRow();
+  const col = range.getColumn();
+  const lastRow = sheet.getLastRow();
+  const lastCol = sheet.getLastColumn();
+  
+  // Проверяем: изменилась ли одна из нужных колонок (Date, Time, Status, Comment)
+  const relevantColumns = [1, 2, 3, 4]; // A, B, C, D
+  if (!relevantColumns.includes(col)) return;
+  
+  // Пропускаем заголовок
+  if (row <= 1) return;
+  
+  // Получаем значения в изменённой строке
+  const dateValue = sheet.getRange(row, 1).getValue();
+  const timeValue = sheet.getRange(row, 2).getValue();
+  const statusValue = sheet.getRange(row, 3).getValue();
+  const commentValue = sheet.getRange(row, 4).getValue();
+  
+  // Проверяем наличие даты и времени (обязательно для обоих случаев)
+  if (!dateValue || !timeValue) return;
+  
+  const statusText = String(statusValue).toLowerCase().trim();
+  let shouldSort = false;
+  
+  // ========== СЛУЧАЙ 1: СВОБОДНО (комментарий не нужен) ==========
+  if (statusText === "свободно") {
+    shouldSort = true;
+  }
+  
+  // ========== СЛУЧАЙ 2: ЗАНЯТО + ЕСТЬ КОММЕНТАРИЙ ==========
+  if (statusText === "занято" && commentValue && String(commentValue).trim() !== "") {
+    shouldSort = true;
+  }
+  
+  // Если условия не выполнены — выходим без сортировки
+  if (!shouldSort) return;
+  
+  // Выполняем сортировку
+  if (lastRow > 1) {
+    const rangeToSort = sheet.getRange(2, 1, lastRow - 1, lastCol);
+    rangeToSort.sort([
+      { column: 1, ascending: true }, // Сначала по дате
+      { column: 2, ascending: true }  // Потом по времени
+    ]);
+  }
+}
