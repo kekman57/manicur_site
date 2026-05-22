@@ -26,7 +26,15 @@ class ManicureCalendar {
         const slotsForDate = scheduleData.filter(slot => slot.date === dateStr);
         if (slotsForDate.length === 0) return null;
         
-        const hasFree = slotsForDate.some(slot => slot.status === 'свободно');
+        // ИСПРАВЛЕНИЕ: Нормализуем статус перед проверкой
+        const hasFree = slotsForDate.some(slot => {
+            if (!slot.status) return false;
+            // Превращаем в строку, убираем пробелы и делаем нижний регистр
+            const status = String(slot.status).trim().toLowerCase();
+            // Проверяем на "свободно", "free", "available" и т.д.
+            return status === 'свободно' || status === 'free' || status === 'available';
+        });
+
         if (hasFree) return 'has-free';
         return 'all-booked';
     }
@@ -48,6 +56,8 @@ class ManicureCalendar {
     
     // Отрисовать календарь
     render() {
+        if (!this.container) return;
+
         const year = this.currentDate.getFullYear();
         const month = this.currentDate.getMonth();
         

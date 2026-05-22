@@ -566,7 +566,7 @@
 <body>
 
 
-// Глобальная переменная для хранения расписания
+// Глобальная переменная для хранения расписания //
 let scheduleData = []; 
 
 
@@ -837,29 +837,67 @@ let scheduleData = [];
     }
 
     // ========== РАСПИСАНИЕ ==========
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyoNsAGQdWMofGLJGhXDy7K7rpDYikniu4JmF3CYzTrnJwx_Yc1z-D0nkvLmjcmgeGG/exec'; // Тот же самый URL, что и для вебхука
 
 async function loadSchedule() {
-    const url = 'https://script.google.com/macros/s/AKfycbyoNsAGQdWMofGLJGhXDy7K7rpDYikniu4JmF3CYzTrnJwx_Yc1z-D0nkvLmjcmgeGG/exec?action=getSchedule';
-    
+    // URL вашего скрипта с параметром action=getSchedule
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycby9SW2S8n0NqaOtVRPwr-cI4EGIMSvcdz-Uq3-pYJJ1PFsjQEyKETO79D0CWL9uCG3l/exec?action=getSchedule';
+
+    console.log("🔵 Загрузка расписания...", scriptUrl);
+
     try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('Network response was not ok');
-        
+        const response = await fetch(scriptUrl, {
+            method: 'GET',
+            // Важно для Google Apps Script, чтобы избежать проблем с редиректом
+            redirect: 'follow' 
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
         
-        // Присваиваем данные в глобальную переменную
-        scheduleData = data; 
+        // Проверка на ошибку от скрипта
+        if (data.error) {
+            console.error("❌ Ошибка от скрипта:", data.error);
+            scheduleData = [];
+            return [];
+        }
+
+        // ОБРАБОТКА ФОРМАТА ДАТЫ
+        // Скрипт возвращает дату в формате "dd.mm.yyyy", а календарю часто нужен "yyyy-mm-dd"
+        const processedData = data.map(slot => {
+            // Разбиваем дату "24.05.2026" на части
+            const parts = slot.date.split('.');
+            if (parts.length === 3) {
+                const day = parts[0];
+                const month = parts[1];
+                const year = parts[2];
+                // Создаем строку в формате ISO "2026-05-24"
+                const isoDate = `${year}-${month}-${day}`;
+                
+                return {
+                    ...slot,
+                    isoDate: isoDate, // Добавляем поле с правильным форматом
+                    originalDate: slot.date // Сохраняем оригинал для отображения
+                };
+            }
+            return slot;
+        });
+
+        scheduleData = processedData;
         
-        console.log('Расписание загружено:', scheduleData);
+        console.log("✅ Расписание загружено и обработано:", scheduleData.length, "слотов");
+        console.log("Пример слота:", scheduleData[0]);
+        
         return scheduleData;
+
     } catch (error) {
-        console.error('Ошибка загрузки расписания:', error);
+        console.error("❌ Ошибка загрузки расписания:", error);
         scheduleData = [];
         return [];
     }
 }
-
 
 
 
