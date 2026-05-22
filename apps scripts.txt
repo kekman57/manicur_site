@@ -1,82 +1,217 @@
-function doGet() {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Schedule");
-  const data = sheet.getDataRange().getValues();
-  const result = [];
-  for (let i = 1; i < data.length; i++) {
-    const row = data[i];
-    const date = row[0];
-    const time = row[1];
-    const status = row[2] === "занято" ? "занято" : "свободно";
-    if (date && time) {
-      result.push({
-        date: date instanceof Date ? `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}` : String(date),
-        time: time instanceof Date ? `${String(time.getHours()).padStart(2,'0')}:${String(time.getMinutes()).padStart(2,'0')}` : String(time),
-        status: status
-      });
+// ================= НАСТРОЙКИ =================
+const BOT_TOKEN = '8978354945:AAFvSKlfzgih4_fk-JksmzCZl1tEVr6PVjQ'; 
+const CHAT_IDS = ['1027184423', '410125725']; 
+const SHEET_NAME = 'Schedule'; 
+// =============================================
+
+/**
+ * Обработка GET запросов (для получения расписания сайтом и проверки вебхука)
+ * КРИТИЧЕСКИ ВАЖНО: Возвращаем ContentService с JSON для работы CORS
+ */
+function doGet(e) {
+  const action = e.parameter.action;
+
+  // 1. Если сайт просит расписание (?action=getSchedule)
+  if (action === 'getSchedule') {
+    try {
+      const slots = getFreeSlotsFromSheet(100); // Берем с запасом
+      const result = {
+        status: 'success',
+        data: slots
+      };
+      
+      return ContentService.createTextOutput(JSON.stringify(result))
+        .setMimeType(ContentService.MimeType.JSON);
+    } catch (err) {
+      const errorResult = { status: 'error', message: err.toString() };
+      return ContentService.createTextOutput(JSON.stringify(errorResult))
+        .setMimeType(ContentService.MimeType.JSON);
     }
   }
-  return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);
+
+  // 2. Если просто зашли проверить статус (браузер или телеграм пинг)
+  return ContentService.createTextOutput("Bot is running. Webhook active.")
+         .setMimeType(ContentService.MimeType.TEXT);
 }
 
+/**
+ * Обработка POST запросов (от Telegram бота)
+ */
+function doPost(e) {
+  try {
+    if (!e || !e.postData || !e.postData.contents) {
+      return ContentService.createTextOutput("Invalid request");
+    }
+    
+    const json = JSON.parse(e.postData.contents);
+    return handleLogic(json);
+  } catch (err) {
+    Logger.log("Ошибка в doPost: " + err.toString());
+    return ContentService.createTextOutput("OK"); 
+  }
+}
 
+/**
+ * Логика обработки событий от Telegram
+ */
+function handleLogic(data) {
+  // 1. Нажатие кнопок (Принять/Отклонить)
+  if (data.callback_query) {
+    handleCallback(data.callback_query);
+    return ContentService.createTextOutput("OK");
+  }
 
+  // 2. Сообщения (игнорируем, так как /free удален)
+  if (data.message) {
+    // Можно добавить автоответ на /start если нужно, но пока тишина
+    return ContentService.createTextOutput("OK");
+  }
 
+  return ContentService.createTextOutput("OK");
+}
 
+/**
+ * Обработка кнопок
+ */
+function handleCallback(callbackData) {
+  const callbackId = callbackData.id;
+  const chatId = callbackData.message.chat.id;
+  const messageId = callbackData.message.message_id;
+  
+  let actionData;
+  try {
+    actionData = JSON.parse(callbackData.data);
+  } catch (e) {
+    Logger.log("Ошибка парсинга callback: " + e);
+    return;
+  }
 
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+  const row = actionData.row;
+  
+  if (!row || !sheet) return;
 
+  let newStatus = '';
+  let messageText = '';
 
+  if (actionData.action === 'accept') {
+    newStatus = 'Занято';
+    messageText = `✅ <b>ЗАПИСЬ ПОДТВЕРЖДЕНА!</b>\nКлиент: ${actionData.clientName}\nДата: ${actionData.date}\nВремя: ${actionData.time}`;
+  } else if (actionData.action === 'reject') {
+    newStatus = 'Отклонено';
+    messageText = `❌ <b>ЗАПИСЬ ОТКЛОНЕНА</b>\nКлиент: ${actionData.clientName}`;
+  }
 
-// ========== УМНАЯ АВТОМАТИЧЕСКАЯ СОРТИРОВКА (2 СЛУЧАЯ) ==========
+  if (newStatus) {
+    try {
+      sheet.getRange(row, 4).setValue(newStatus);
+      
+      const url = `https://api.telegram.org/bot${BOT_TOKEN}/editMessageText`;
+      const payload = {
+        chat_id: chatId,
+        message_id: messageId,
+        text: messageText,
+        parse_mode: 'HTML',
+        reply_markup: JSON.stringify({ inline_keyboard: [] })
+      };
+      
+      UrlFetchApp.fetch(url, {
+        method: 'post',
+        contentType: 'application/json',
+        payload: JSON.stringify(payload),
+        muteHttpExceptions: true
+      });
+    } catch (e) {
+      Logger.log("Ошибка обновления: " + e);
+    }
+  }
+}
+
+/**
+ * Получение слотов из таблицы
+ */
+function getFreeSlotsFromSheet(limit) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) return [];
+
+  const data = sheet.getDataRange().getValues();
+  if (data.length < 2) return [];
+
+  const now = new Date();
+  const freeSlots = [];
+  
+  const COL_DATE = 0;
+  const COL_TIME = 1;
+  const COL_STATUS = 3;
+
+  for (let i = 1; i < data.length; i++) {
+    const rowDateVal = data[i][COL_DATE];
+    const rowTimeVal = data[i][COL_TIME];
+    const status = data[i][COL_STATUS];
+
+    if (['Занято', 'Отклонено', 'Отмена'].includes(status)) continue;
+    if (!(rowDateVal instanceof Date) || isNaN(rowDateVal)) continue;
+
+    const slotDate = new Date(rowDateVal);
+    
+    if (typeof rowTimeVal === 'string' && rowTimeVal.includes(':')) {
+      const parts = rowTimeVal.split(':');
+      slotDate.setHours(parseInt(parts[0], 10), parseInt(parts[1], 10), 0);
+    } else {
+      continue;
+    }
+
+    if (slotDate > now) {
+      freeSlots.push({
+        date: Utilities.formatDate(rowDateVal, Session.getScriptTimeZone(), "dd.MM.yyyy"),
+        time: rowTimeVal,
+        timestamp: slotDate.getTime()
+      });
+      if (freeSlots.length >= limit) break;
+    }
+  }
+
+  freeSlots.sort((a, b) => a.timestamp - b.timestamp);
+  return freeSlots;
+}
+
+/**
+ * Отправка сообщений в Telegram
+ */
+function sendTelegramMessage(chatId, text, replyMarkup = null) {
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+  const payload = {
+    chat_id: chatId,
+    text: text,
+    parse_mode: 'HTML'
+  };
+  
+  if (replyMarkup) {
+    payload.reply_markup = JSON.stringify(replyMarkup);
+  }
+
+  try {
+    UrlFetchApp.fetch(url, {
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify(payload),
+      muteHttpExceptions: true
+    });
+  } catch (e) {
+    Logger.log("Ошибка отправки: " + e);
+  }
+}
+
+/**
+ * Триггер сортировки (работает при ручном редактировании)
+ */
 function onEdit(e) {
-  if (!e) return;
-  
-  const sheet = e.source.getActiveSheet();
-  if (sheet.getName() !== "Schedule") return;
-  
-  const range = e.range;
-  const row = range.getRow();
-  const col = range.getColumn();
-  const lastRow = sheet.getLastRow();
-  const lastCol = sheet.getLastColumn();
-  
-  // Проверяем: изменилась ли одна из нужных колонок (Date, Time, Status, Comment)
-  const relevantColumns = [1, 2, 3, 4]; // A, B, C, D
-  if (!relevantColumns.includes(col)) return;
-  
-  // Пропускаем заголовок
-  if (row <= 1) return;
-  
-  // Получаем значения в изменённой строке
-  const dateValue = sheet.getRange(row, 1).getValue();
-  const timeValue = sheet.getRange(row, 2).getValue();
-  const statusValue = sheet.getRange(row, 3).getValue();
-  const commentValue = sheet.getRange(row, 4).getValue();
-  
-  // Проверяем наличие даты и времени (обязательно для обоих случаев)
-  if (!dateValue || !timeValue) return;
-  
-  const statusText = String(statusValue).toLowerCase().trim();
-  let shouldSort = false;
-  
-  // ========== СЛУЧАЙ 1: СВОБОДНО (комментарий не нужен) ==========
-  if (statusText === "свободно") {
-    shouldSort = true;
-  }
-  
-  // ========== СЛУЧАЙ 2: ЗАНЯТО + ЕСТЬ КОММЕНТАРИЙ ==========
-  if (statusText === "занято" && commentValue && String(commentValue).trim() !== "") {
-    shouldSort = true;
-  }
-  
-  // Если условия не выполнены — выходим без сортировки
-  if (!shouldSort) return;
-  
-  // Выполняем сортировку
-  if (lastRow > 1) {
-    const rangeToSort = sheet.getRange(2, 1, lastRow - 1, lastCol);
-    rangeToSort.sort([
-      { column: 1, ascending: true }, // Сначала по дате
-      { column: 2, ascending: true }  // Потом по времени
-    ]);
+  if (!e || !e.range) return;
+  const sheet = e.range.getSheet();
+  if (sheet.getName() === SHEET_NAME) {
+    try {
+      sheet.sort([{column: 1, ascending: true}, {column: 2, ascending: true}]);
+    } catch (err) { /* игнор */ }
   }
 }

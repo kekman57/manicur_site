@@ -1,16 +1,71 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Маникюрный уголок | Запись к мастеру</title>
+    <title>Маникюрный уголок | Запись к мастеру в Санкт-Петербурге</title>
 
-	<link rel="icon" type="image/x-icon" href="/favicon.ico">
-	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Профессиональный маникюр и педикюр в Санкт-Петербурге. Стерильные инструменты, качественные материалы, деликатный подход. Запись онлайн!">
+    <meta name="keywords" content="маникюр, педикюр, ногти, СПБ, запись на маникюр, мастер маникюра, гель-лак, наращивание ногтей">
+    <meta name="author" content="Мастер Валерия">
+    <meta name="robots" content="index, follow">
 
-	<link rel="stylesheet" href="/calendar.css">
-	<script src="/calendar.js"></script>
+    <!-- Open Graph Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Маникюрный уголок | Мастер Валерия">
+    <meta property="og:description" content="Профессиональный маникюр и педикюр в Санкт-Петербурге. Запись онлайн!">
+    <meta property="og:image" content="https://placehold.co/1200x630/f3e6df/ccaa98?text=Маникюрный+уголок">
+    <meta property="og:url" content="https://manicur-site.pages.dev">
+    <meta property="og:site_name" content="Маникюрный уголок">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Маникюрный уголок | Мастер Валерия">
+    <meta name="twitter:description" content="Профессиональный маникюр и педикюр в Санкт-Петербурге. Запись онлайн!">
+    <meta name="twitter:image" content="https://placehold.co/1200x630/f3e6df/ccaa98?text=Маникюрный+уголок">
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109338089', 'ym');
+
+        ym(109338089, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/109338089" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
+    <!-- Schema.org LocalBusiness -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BeautySalon",
+        "name": "Маникюрный уголок",
+        "description": "Профессиональный маникюр и педикюр в Санкт-Петербурге",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Коломяжский проспект 18, БЦ Норд-Хаус",
+            "addressLocality": "Санкт-Петербург",
+            "addressCountry": "RU"
+        },
+        "telephone": "+79991234567",
+        "openingHours": "Mo-Su 09:00-21:00",
+        "priceRange": "1300-4500 RUB",
+        "image": "https://placehold.co/1200x630/f3e6df/ccaa98?text=Маникюрный+уголок"
+    }
+    </script>
+
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+        <link rel="stylesheet" href="/calendar.css">
+        <script src="/calendar.js"></script>
 
 
 
@@ -393,6 +448,107 @@
             border-top: 1px solid #f0e0d6;
         }
 
+        /* Lazy-load placeholder */
+        .lazy-img {
+            background: linear-gradient(90deg, #f3e6df 25%, #f9efeb 50%, #f3e6df 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            min-height: 100px;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Success modal styles */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .success-modal.show {
+            display: flex;
+        }
+        .success-modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            max-width: 400px;
+            margin: 1rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .success-modal-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        .success-modal-title {
+            font-size: 1.5rem;
+            color: #5c4238;
+            margin-bottom: 1rem;
+        }
+        .success-modal-details {
+            background: #fcf6f2;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin: 1rem 0;
+            text-align: left;
+        }
+        .success-modal-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f0e0d6;
+        }
+        .success-modal-detail-row:last-child {
+            border-bottom: none;
+        }
+        .success-modal-btn {
+            background: #ccaa98;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 0.5rem;
+            transition: all 0.2s;
+        }
+        .success-modal-btn:hover {
+            background: #b48b75;
+        }
+        .success-modal-btn.secondary {
+            background: #f5e8e2;
+            color: #5c4238;
+        }
+        .success-modal-btn.secondary:hover {
+            background: #edd9cf;
+        }
+
+        /* Widget "Осталось мест" */
+        .slots-left-widget {
+            background: linear-gradient(135deg, #ccaa98, #b48b75);
+            color: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 1rem;
@@ -409,6 +565,14 @@
 </head>
 <body>
 
+
+// Глобальная переменная для хранения расписания
+let scheduleData = []; 
+
+
+
+
+
 <!-- ПЛАВАЮЩАЯ КНОПКА -->
 <div class="floating-btn" id="floatingBtn" title="Записаться сейчас">📅</div>
 
@@ -423,6 +587,9 @@
 
     <!-- БЛИЖАЙШИЕ СВОБОДНЫЕ СЛОТЫ -->
     <section>
+        <div id="slotsLeftWidget" class="slots-left-widget" style="display: none;">
+            🔥 На этой неделе осталось <span id="slotsLeftCount">0</span> свободных окон!
+        </div>
         <h2>⚡ Свободные слоты на эту неделю</h2>
         <div id="freeSlotsContainer" class="slots-grid">
             <div style="text-align: center; width: 100%;">Загрузка доступных слотов...</div>
@@ -513,28 +680,42 @@
                     <option value="">-- сначала выберите дату --</option>
                 </select>
             </div>
-            
+
             <div class="form-group">
                 <label>Выберите услуги *</label>
                 <div id="servicesCheckboxes" class="services-checkboxes"></div>
                 <small style="color: #b6a297;">✓ можно выбрать несколько услуг</small>
             </div>
-            
+
             <div class="form-group">
                 <label>Пожелания</label>
                 <textarea id="comments" rows="2" placeholder="Френч, стразы, дизайн..."></textarea>
             </div>
 
-	    <!-- КАЛЬКУЛЯТОР СТОИМОСТИ -->
-	<div class="form-group" style="background: #fcf6f2; border-radius: 1rem; padding: 1rem; text-align: center;">
-    	<div style="font-weight: 500; color: #5c4238;">💰 Итого к оплате:</div>
-    	<div id="totalPriceDisplay" style="font-size: 2rem; font-weight: 700; color: #b47c5e;">0 ₽</div>
-    	<div style="font-size: 0.7rem; color: #b6a297;">Сумма может измениться после консультации с мастером</div>
+            <!-- КАЛЬКУЛЯТОР СТОИМОСТИ -->
+        <div class="form-group" style="background: #fcf6f2; border-radius: 1rem; padding: 1rem; text-align: center;">
+        <div style="font-weight: 500; color: #5c4238;">💰 Итого к оплате:</div>
+        <div id="totalPriceDisplay" style="font-size: 2rem; font-weight: 700; color: #b47c5e;">0 ₽</div>
+        <div style="font-size: 0.7rem; color: #b6a297;">Сумма может измениться после консультации с мастером</div>
 </div>
             <button type="submit" class="btn-submit">✉️ Отправить запись</button>
             <div id="successMessage" class="success-message">✅ Заявка отправлена! Мастер свяжется с вами.</div>
         </form>
     </section>
+
+    <!-- SUCCESS MODAL -->
+    <div id="successModal" class="success-modal">
+        <div class="success-modal-content">
+            <div class="success-modal-icon">🎉</div>
+            <div class="success-modal-title">Вы записаны!</div>
+            <p>Заявка отправлена мастеру. Мы свяжемся с вами для подтверждения.</p>
+            <div class="success-modal-details" id="successModalDetails">
+                <!-- Details will be filled dynamically -->
+            </div>
+            <button class="success-modal-btn" onclick="downloadICS()">📅 Добавить в календарь</button>
+            <button class="success-modal-btn secondary" onclick="closeSuccessModal()">Закрыть</button>
+        </div>
+    </div>
 
     <!-- ОТЗЫВЫ -->
     <section>
@@ -579,36 +760,36 @@
 
 <script>
     // ========== ДАННЫЕ ==========
-	const mainServices = [
-    		{ title: "Снятие + маникюр + однотон", price: "2500 ₽", priceNum: 2500, desc: "укрепление гелем входит в стоимость", img: "/images/manicur.jpg" },
-   		 { title: "Маникюр без покрытия", price: "1300 ₽", priceNum: 1300, desc: "уход, форма, кутикула", img: "https://placehold.co/600x400/e8d4ca/dbbcac?	text=Без+покрытия" },
-    		{ title: "Когти экстра длина", price: "4500 ₽", priceNum: 4500, desc: "наращивание, укрепление, любая форма", img: "/images/claw.jpg" },
-   		 { title: "Наращивание ногтей", price: "от 3500 ₽", priceNum: 3500, desc: "моделирование, любая форма и длина", img: "/images/narashivanie.jpg" }
-	];
+        const mainServices = [
+                { title: "Снятие + маникюр + однотон", price: "2500 ₽", priceNum: 2500, desc: "укрепление гелем входит в стоимость", img: "/images/manicur.jpg" },
+                 { title: "Маникюр без покрытия", price: "1300 ₽", priceNum: 1300, desc: "уход, форма, кутикула", img: "https://placehold.co/600x400/e8d4ca/dbbcac?     text=Без+покрытия" },
+                { title: "Когти экстра длина", price: "4500 ₽", priceNum: 4500, desc: "наращивание, укрепление, любая форма", img: "/images/claw.jpg" },
+                 { title: "Наращивание ногтей", price: "от 3500 ₽", priceNum: 3500, desc: "моделирование, любая форма и длина", img: "/images/narashivanie.jpg" }
+        ];
 
 
 
 
 
-	const extraServices = [
-    	{ title: "Покрытие лечебным лаком", price: "100 ₽", priceNum: 100, desc: "", img: "https://placehold.co/600x400/f3e0d6/ca9e89?text=Лечебный+лак" },
-   	 { title: "Поднятие клюющего / наращивание 1 ногтя", price: "150 ₽", priceNum: 150, desc: "", img: "/images/narashivanie.jpg" },
-   	 { title: "Ремонт ногтя", price: "100 ₽", priceNum: 100, desc: "", img: "https://placehold.co/600x400/eedfd6/cfaa99?text=Ремонт" },
-  	  { title: "Френч / втирка", price: "500 ₽", priceNum: 500, desc: "", img: "/images/french.jpg" },
-   	 { title: "Дизайн «кошачий глаз»", price: "200 ₽", priceNum: 200, desc: "", img: "/images/koshka design.jpg" },
-   	 { title: "Остальные дизайны", price: "от 100 ₽", priceNum: 100, desc: "уточняйте при записи", img: "https://placehold.co/600x400/f2e2d8/bb9b89?text=Дизайн" }
-	];
+        const extraServices = [
+        { title: "Покрытие лечебным лаком", price: "100 ₽", priceNum: 100, desc: "", img: "https://placehold.co/600x400/f3e0d6/ca9e89?text=Лечебный+лак" },
+         { title: "Поднятие клюющего / наращивание 1 ногтя", price: "150 ₽", priceNum: 150, desc: "", img: "/images/narashivanie.jpg" },
+         { title: "Ремонт ногтя", price: "100 ₽", priceNum: 100, desc: "", img: "https://placehold.co/600x400/eedfd6/cfaa99?text=Ремонт" },
+          { title: "Френч / втирка", price: "500 ₽", priceNum: 500, desc: "", img: "/images/french.jpg" },
+         { title: "Дизайн «кошачий глаз»", price: "200 ₽", priceNum: 200, desc: "", img: "/images/koshka design.jpg" },
+         { title: "Остальные дизайны", price: "от 100 ₽", priceNum: 100, desc: "уточняйте при записи", img: "https://placehold.co/600x400/f2e2d8/bb9b89?text=Дизайн" }
+        ];
 
-	const pedicureServices = [
-   	 { title: "Обработка стоп + пальчиков + гель-лак", price: "2900 ₽", priceNum: 2900, desc: "полный уход", img: "https://placehold.co/600x400/edd6cb/c0a190?text=Педикюр+гель-лак" },
-    	{ title: "Обработка пальчиков + гель-лак", price: "2600 ₽", priceNum: 2600, desc: "", img: "/images/pedikur palchiki.jpg" },
-    	{ title: "Обработка стоп + пальчиков", price: "2300 ₽", priceNum: 2300, desc: "без покрытия", img: "/images/stopi.jpg" }
-	];
+        const pedicureServices = [
+         { title: "Обработка стоп + пальчиков + гель-лак", price: "2900 ₽", priceNum: 2900, desc: "полный уход", img: "https://placehold.co/600x400/edd6cb/c0a190?text=Педикюр+гель-лак" },
+        { title: "Обработка пальчиков + гель-лак", price: "2600 ₽", priceNum: 2600, desc: "", img: "/images/pedikur palchiki.jpg" },
+        { title: "Обработка стоп + пальчиков", price: "2300 ₽", priceNum: 2300, desc: "без покрытия", img: "/images/stopi.jpg" }
+        ];
 
     const gallery = [
         "/images/portpholio.jpg",
         "/images/portpholio 1.jpg",
-        "/images/portpholio 2.jpg", 
+        "/images/portpholio 2.jpg",
         "/images/portpholio 3.jpg",
         "/images/portpholio 4.jpg",
         "/images/portpholio 5.jpg",
@@ -632,7 +813,7 @@
     ];
 
     // ========== ТЕЛЕГРАМ ==========
-    const BOT_TOKEN = '8978354945:AAGRxkrcVdd7mKS2l-SZSrq_vr4c9-63dtE';
+    const BOT_TOKEN = '8978354945:AAFvSKlfzgih4_fk-JksmzCZl1tEVr6PVjQ';
     const RECIPIENTS = ['410125725', '1027184423'];
 
     async function sendToTelegram(message) {
@@ -656,27 +837,36 @@
     }
 
     // ========== РАСПИСАНИЕ ==========
-    const SCHEDULE_API_URL = 'https://script.google.com/macros/s/AKfycbwojXTKHlOkUyzqcLWz1Js4hTfYvzfHwp7o59j9uHtLYJq2F9C_DCl49RCjdS946qMm/exec';
-    let scheduleData = [];
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyoNsAGQdWMofGLJGhXDy7K7rpDYikniu4JmF3CYzTrnJwx_Yc1z-D0nkvLmjcmgeGG/exec'; // Тот же самый URL, что и для вебхука
 
-    async function loadSchedule() {
-        try {
-            const response = await fetch(SCHEDULE_API_URL);
-            let data = await response.json();
-            scheduleData = data.map(item => {
-                let dateStr = item.date;
-                if (dateStr && dateStr.match(/^\d{2}\.\d{2}\.\d{4}$/)) {
-                    const parts = dateStr.split('.');
-                    dateStr = `${parts[2]}-${parts[1]}-${parts[0]}`;
-                }
-                return { date: dateStr, time: item.time, status: item.status };
-            });
-            return true;
-        } catch (error) {
-            console.error('Ошибка загрузки расписания:', error);
-            return false;
-        }
+async function loadSchedule() {
+    const url = 'https://script.google.com/macros/s/AKfycbyoNsAGQdWMofGLJGhXDy7K7rpDYikniu4JmF3CYzTrnJwx_Yc1z-D0nkvLmjcmgeGG/exec?action=getSchedule';
+    
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Network response was not ok');
+        
+        const data = await response.json();
+        
+        // Присваиваем данные в глобальную переменную
+        scheduleData = data; 
+        
+        console.log('Расписание загружено:', scheduleData);
+        return scheduleData;
+    } catch (error) {
+        console.error('Ошибка загрузки расписания:', error);
+        scheduleData = [];
+        return [];
     }
+}
+
+
+
+
+
+
+
+
 
     function isTimeAvailable(date, time) {
         const slot = scheduleData.find(s => s.date === date && s.time === time);
@@ -690,7 +880,7 @@
         const result = [];
         const endDate = new Date(today);
         endDate.setDate(today.getDate() + days);
-        
+
         for (let d = new Date(today); d <= endDate; d.setDate(d.getDate() + 1)) {
             const dateStr = d.toISOString().split('T')[0];
             const slotsForDate = scheduleData.filter(s => s.date === dateStr && s.status === 'свободно');
@@ -716,65 +906,65 @@
 async function renderFreeSlots() {
     const container = document.getElementById('freeSlotsContainer');
     if (!container) return;
-    
+
     // Показываем скелетон загрузки
     container.innerHTML = '<div style="text-align: center; width: 100%;">⏳ Загрузка свободных слотов...</div>';
-    
+
     // Ждём расписание, но с таймаутом 2 секунды
     let attempts = 0;
     while (scheduleData.length === 0 && attempts < 20) {
         await new Promise(resolve => setTimeout(resolve, 200));
         attempts++;
     }
-    
+
     if (scheduleData.length === 0) {
         container.innerHTML = '<div style="text-align: center; width: 100%;">⏳ Расписание загружается, попробуйте обновить страницу</div>';
         return;
     }
-    
+
     const now = new Date();
     const todayStr = now.toISOString().split('T')[0];
     const currentTimeMinutes = now.getHours() * 60 + now.getMinutes();
-    
+
     // Быстрая фильтрация — один проход по массиву
     const allFreeSlots = [];
-    
+
     for (const slot of scheduleData) {
         if (slot.status !== 'свободно') continue;
         if (slot.date < todayStr) continue;
-        
+
         // Ограничиваем 7 днями
         const slotDate = new Date(slot.date);
         const daysDiff = Math.floor((slotDate - now) / (1000 * 60 * 60 * 24));
         if (daysDiff > 7) continue;
-        
+
         if (slot.date === todayStr) {
             const [hours, minutes] = slot.time.split(':').map(Number);
             const slotTimeMinutes = hours * 60 + minutes;
             if (slotTimeMinutes <= currentTimeMinutes) continue;
         }
-        
+
         allFreeSlots.push({ date: slot.date, time: slot.time });
     }
-    
+
     // Сортировка
     allFreeSlots.sort((a, b) => {
         if (a.date !== b.date) return a.date.localeCompare(b.date);
         return a.time.localeCompare(b.time);
     });
-    
+
     const slots = allFreeSlots.slice(0, 5);
-    
+
     if (slots.length === 0) {
         container.innerHTML = '<div style="text-align: center; width: 100%;">🎉 На этой неделе все слоты заняты или прошли. Выберите дату в календаре ниже.</div>';
         return;
     }
-    
+
     const formatDate = (dateStr) => {
         const [year, month, day] = dateStr.split('-');
         return `${day}.${month}.${year}`;
     };
-    
+
     container.innerHTML = slots.map(slot => `
         <div class="slot-card">
             <div class="slot-date">${formatDate(slot.date)}</div>
@@ -782,20 +972,20 @@ async function renderFreeSlots() {
             <button class="slot-book-btn" data-date="${slot.date}" data-time="${slot.time}">📅 Записаться</button>
         </div>
     `).join('');
-    
+
     // Обработчики (без async в цикле)
     document.querySelectorAll('.slot-book-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
             const date = btn.dataset.date;
             const time = btn.dataset.time;
-            
+
             document.getElementById('bookingDate').value = date;
             if (window.calendar) {
                 window.calendar.setSelectedDate(date);
             }
-            
+
             await updateTimeOptions(true);
-            
+
             const timeSelect = document.getElementById('bookingTime');
             if (timeSelect) {
                 for (let i = 0; i < timeSelect.options.length; i++) {
@@ -805,7 +995,7 @@ async function renderFreeSlots() {
                     }
                 }
             }
-            
+
             document.getElementById('bookingSection').scrollIntoView({ behavior: 'smooth' });
         });
     });
@@ -852,27 +1042,27 @@ async function renderFreeSlots() {
 async function updateTimeOptions(skipLoad = false) {
     const date = document.getElementById('bookingDate').value;
     const timeSelect = document.getElementById('bookingTime');
-    
+
     if (!date) {
         timeSelect.innerHTML = '<option value="">-- сначала выберите дату --</option>';
         timeSelect.disabled = false;
         return;
     }
-    
+
     // Если не сказано пропустить загрузку — загружаем
     if (!skipLoad) {
         await loadSchedule();
     }
-    
+
     const timesForDate = scheduleData.filter(slot => slot.date === date).map(slot => slot.time);
     const uniqueTimes = [...new Set(timesForDate)].sort();
-    
+
     if (uniqueTimes.length === 0) {
         timeSelect.innerHTML = '<option value="" disabled selected>📅 Нет записи на эту дату</option>';
         timeSelect.disabled = false; // поле активно, но выбран disabled option
         return;
     }
-    
+
     let options = '<option value="">-- выберите время --</option>';
     let hasFreeSlots = false;
     for (const time of uniqueTimes) {
@@ -881,7 +1071,7 @@ async function updateTimeOptions(skipLoad = false) {
             hasFreeSlots = true;
         }
     }
-    
+
     if (!hasFreeSlots) {
         timeSelect.innerHTML = '<option value="" disabled selected>❌ На эту дату всё занято</option>';
         timeSelect.disabled = false;
@@ -890,7 +1080,7 @@ async function updateTimeOptions(skipLoad = false) {
         timeSelect.disabled = false; // активируем только когда есть варианты
     }
 }
-    
+
 
 
 
@@ -926,14 +1116,44 @@ async function updateTimeOptions(skipLoad = false) {
         `).join('');
     }
 
+    // Lazy-load для галереи
     function renderGallery() {
         const container = document.getElementById('galleryContainer');
         if (!container) return;
-        container.innerHTML = gallery.map(url => `
+        container.innerHTML = gallery.map((url, idx) => `
             <div class="gallery-item" onclick="window.open('${url}','_blank')">
-                <img src="${url}" alt="работа" onerror="this.src='https://placehold.co/600x600/f0e0d6/white?text=Фото+скоро'">
+                <img data-src="${url}" alt="работа ${idx + 1}" class="lazy-img" onerror="this.src='https://placehold.co/600x600/f0e0d6/white?text=Фото+скоро'">
             </div>
         `).join('');
+        // Запускаем Intersection Observer после рендера
+        initLazyLoad();
+    }
+
+    // Intersection Observer для ленивой загрузки изображений
+    function initLazyLoad() {
+        if ('IntersectionObserver' in window) {
+            const imgObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.classList.remove('lazy-img');
+                            observer.unobserve(img);
+                        }
+                    }
+                });
+            }, { rootMargin: '50px 0px' });
+
+            document.querySelectorAll('.lazy-img').forEach(img => {
+                imgObserver.observe(img);
+            });
+        } else {
+            // Fallback для старых браузеров
+            document.querySelectorAll('.lazy-img').forEach(img => {
+                img.src = img.dataset.src;
+            });
+        }
     }
 
 function renderServiceCheckboxes() {
@@ -946,13 +1166,13 @@ function renderServiceCheckboxes() {
             <span><strong>${service.title}</strong> — ${service.price}</span>
         </label>
     `).join('');
-    
+
     // Добавляем обработчик для пересчёта суммы при изменении выбора
     const checkboxes = document.querySelectorAll('#servicesCheckboxes input[type="checkbox"]');
     checkboxes.forEach(cb => {
         cb.addEventListener('change', updateTotalPrice);
     });
-    
+
     // Первый расчёт суммы
     updateTotalPrice();
 }
@@ -961,14 +1181,14 @@ function renderServiceCheckboxes() {
 function updateTotalPrice() {
     const checkboxes = document.querySelectorAll('#servicesCheckboxes input[type="checkbox"]:checked');
     let total = 0;
-    
+
     checkboxes.forEach(checkbox => {
         const price = parseFloat(checkbox.dataset.price);
         if (!isNaN(price)) {
             total += price;
         }
     });
-    
+
     const totalDisplay = document.getElementById('totalPriceDisplay');
     if (totalDisplay) {
         totalDisplay.textContent = total + ' ₽';
@@ -1119,12 +1339,12 @@ function updateTotalPrice() {
     renderFAQ();
     setMinDate();
     // renderFreeSlots(); //
-    
+
     // Функция для получения данных расписания из scheduleData
     function getScheduleDataForCalendar() {
         return scheduleData;
     }
-    
+
     // Функция при выборе даты в календаре
 
 
@@ -1136,21 +1356,21 @@ function onCalendarDateSelect(dateStr) {
     if (hiddenDateInput) {
         hiddenDateInput.value = dateStr;
     }
-    
+
     // 1. БЛОКИРУЕМ ПОЛЕ ВРЕМЕНИ И ПОКАЗЫВАЕМ ЗАГРУЗКУ
     const timeSelect = document.getElementById('bookingTime');
     if (timeSelect) {
         timeSelect.disabled = true;
         timeSelect.innerHTML = '<option value="" disabled selected>⏳ Загружается расписание...</option>';
     }
-    
+
     // 2. ЗАГРУЖАЕМ НОВЫЕ ДАННЫЕ
     updateTimeOptions();
 }
 
 
 
-    
+
     // Ждём загрузку расписания и ПОТОМ создаём календарь с уже готовыми данными
 async function initCalendar() {
     console.log('🔵 initCalendar вызвана');
@@ -1169,14 +1389,131 @@ async function initCalendar() {
     console.log('🔵 renderFreeSlots завершён');
 }
 
-initCalendar();
+document.addEventListener('DOMContentLoaded', initCalendar);
 
 
 
 
 
 
-    
+
+    // ========== КЭШИРОВАНИЕ РАСПИСАНИЯ В LOCALSTORAGE ==========
+    const CACHE_KEY = 'manicur_schedule_cache';
+    const CACHE_DURATION = 5 * 60 * 1000; // 5 минут
+
+    function getCachedSchedule() {
+        try {
+            const cached = localStorage.getItem(CACHE_KEY);
+            if (cached) {
+                const { data, timestamp } = JSON.parse(cached);
+                if (Date.now() - timestamp < CACHE_DURATION) {
+                    return data;
+                }
+            }
+        } catch (e) {
+            console.error('Ошибка чтения кэша:', e);
+        }
+        return null;
+    }
+
+    function saveScheduleToCache(data) {
+        try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify({
+                data: data,
+                timestamp: Date.now()
+            }));
+        } catch (e) {
+            console.error('Ошибка сохранения кэша:', e);
+        }
+    }
+
+    // Переопределяем loadSchedule с кэшированием
+    const originalLoadSchedule = loadSchedule;
+    loadSchedule = async function() {
+        const cached = getCachedSchedule();
+        if (cached) {
+            scheduleData = cached.map(item => {
+                let dateStr = item.date;
+                if (dateStr && dateStr.match(/^\d{2}\.\d{2}\.\d{4}$/)) {
+                    const parts = dateStr.split('.');
+                    dateStr = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                }
+                return { date: dateStr, time: item.time, status: item.status };
+            });
+            return true;
+        }
+        const result = await originalLoadSchedule();
+        if (result) saveScheduleToCache(scheduleData);
+        return result;
+    };
+
+    // ========== СОХРАНЕНИЕ ФОРМЫ ==========
+    function saveFormData() {
+        const formData = {
+            name: document.getElementById('clientName')?.value || '',
+            phone: document.getElementById('clientPhone')?.value || ''
+        };
+        localStorage.setItem('manicur_form_data', JSON.stringify(formData));
+    }
+    function restoreFormData() {
+        try {
+            const saved = localStorage.getItem('manicur_form_data');
+            if (saved) {
+                const data = JSON.parse(saved);
+                if (document.getElementById('clientName')) document.getElementById('clientName').value = data.name || '';
+                if (document.getElementById('clientPhone')) document.getElementById('clientPhone').value = data.phone || '';
+            }
+        } catch (e) { console.error(e); }
+    }
+    document.getElementById('clientName')?.addEventListener('input', saveFormData);
+    document.getElementById('clientPhone')?.addEventListener('input', saveFormData);
+    setTimeout(restoreFormData, 500);
+    function clearSavedFormData() { localStorage.removeItem('manicur_form_data'); }
+
+    // ========== SUCCESS MODAL ==========
+    let lastBookingData = null;
+    function showSuccessModal(bookingData) {
+        lastBookingData = bookingData;
+        const d = document.getElementById('successModalDetails');
+        if (d) d.innerHTML = '<div class="success-modal-detail-row"><span>📅 Дата:</span><strong>'+bookingData.date+'</strong></div>' +
+            '<div class="success-modal-detail-row"><span>⏰ Время:</span><strong>'+bookingData.time+'</strong></div>' +
+            '<div class="success-modal-detail-row"><span>💰 Сумма:</span><strong>'+bookingData.total+'</strong></div>' +
+            '<div class="success-modal-detail-row"><span>💅 Услуги:</span><strong>'+bookingData.services.length+' выбр.</strong></div>';
+        document.getElementById('successModal').classList.add('show');
+    }
+    function closeSuccessModal() { document.getElementById('successModal').classList.remove('show'); }
+    function downloadICS() {
+        if (!lastBookingData) return;
+        const [year, month, day] = lastBookingData.date.split('-');
+        const [hours, minutes] = lastBookingData.time.split(':');
+        const start = new Date(year, month-1, day, hours, minutes);
+        const end = new Date(start); end.setHours(end.getHours()+1.5);
+        const fmt = d => d.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+        const ics = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//ManicureCorner//RU\r\nBEGIN:VEVENT\r\nDTSTART:'+fmt(start)+'\r\nDTEND:'+fmt(end)+'\r\nSUMMARY:Запись на маникюр\r\nDESCRIPTION:'+lastBookingData.services.join(', ')+'\r\nLOCATION:Коломяжский проспект 18, БЦ Норд-Хаус, Санкт-Петербург\r\nUID:'+Date.now()+'@manicur-site\r\nEND:VEVENT\r\nEND:VCALENDAR';
+        const blob = new Blob([ics], {type:'text/calendar'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'zapis_'+lastBookingData.date+'.ics';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    // ========== WIDGET "ОСТАЛОСЬ МЕСТ" ==========
+    function updateSlotsLeftWidget() {
+        const w = document.getElementById('slotsLeftWidget'), c = document.getElementById('slotsLeftCount');
+        if (!w || !c) return;
+        const now = new Date(), today = now.toISOString().split('T')[0];
+        const nextWeek = new Date(now); nextWeek.setDate(nextWeek.getDate()+7);
+        const nextWeekStr = nextWeek.toISOString().split('T')[0];
+        const count = scheduleData.filter(s => s.status==='свободно' && s.date>=today && s.date<=nextWeekStr).length;
+        if (count > 0 && count <= 10) { c.textContent = count; w.style.display = 'block'; }
+        else w.style.display = 'none';
+    }
+    if (typeof renderFreeSlots === 'function') {
+        const orig = renderFreeSlots;
+        renderFreeSlots = async function() { await orig(); updateSlotsLeftWidget(); };
+    }
+
     document.getElementById('bookingDate')?.addEventListener('change', updateTimeOptions);
     document.getElementById('bookingForm')?.addEventListener('submit', handleSubmit);
     document.getElementById('callbackForm')?.addEventListener('submit', handleCallback);
